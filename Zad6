@@ -1,4 +1,4 @@
-Co się dzieje?
+/* Co się dzieje?
 
 Program kończy się naruszeniem ochrony pamięci (SIGSEGV).
 
@@ -7,7 +7,7 @@ Dlaczego?
 Przekroczony został dostępny stos w pamięci.
 
 Jak to naprawić? Poprawiony program:
-
+*/
 /******************************************************************************
 * FILE: bug2.c
 * DESCRIPTION:
