@@ -4,9 +4,9 @@
 #include <math.h>
 
 #define LWATKOW 8
-#define PROBY 600
+#define PROBY 99999
 
-void *wypisz(void *idWatku) {
+void *wylicz(void *idWatku) {
 
     int id;
     id = (long)idWatku;
@@ -16,25 +16,47 @@ void *wypisz(void *idWatku) {
 
     for(int i=0; i < PROBY; i++) {
 
-        x = drand48();
-        y = drand48();
+        x = drand48()*2-1;
+        y = drand48()*2-1;
 
-        if(sqrt(x*x+y*y) < 0.5) licznik++;
+        //printf("\nx: %f, y: %f\n", x, y);
+
+        if(sqrt(x*x+y*y) < 1) licznik++;
     }
 
-    double pi = (4.0*licznik)/PROBY;
+    double pi = (licznik*4.0)/PROBY;
+    double *wskPi = &pi;    
 
     printf("Wątek %d uznaje, że liczba pi to: %f\n", id, pi);
-    pthread_exit(NULL);
+    pthread_exit((void*)wskPi);
 }
 
 int main() {
 
+    void *wskStatus;
+    double piCalkowite = 0.0;
+    double *status;
+
     pthread_t watek[LWATKOW]; // Utworzenie tablicy wątków
+    pthread_attr_t attr;
+
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
     for(int i = 0; i < LWATKOW; i++)
-        if(pthread_create(&watek[i], NULL, wypisz, (void *)(long)i))
+        if(pthread_create(&watek[i], &attr, wylicz, (void *)(long)i))
             printf("\nBłąd tworzenia wątku!\n");
 
+    pthread_attr_destroy(&attr); // Usunięcie zawartości &attr
+    
+    for(int i = 0; i < LWATKOW; i++) {
+
+        pthread_join(watek[i], &wskStatus); // Dołączanie do wątków, by pobrać wartość.
+        status = (double*) wskStatus;
+        printf("\n%f\n", *status); 
+        piCalkowite += (*status)/LWATKOW; // Wyliczanie średniej.
+    }
+    
+    printf("\nŚrednia wynosi: %f\n", piCalkowite);
     pthread_exit(NULL);
 }
