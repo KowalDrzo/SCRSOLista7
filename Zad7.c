@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define LWATKOW 8
-#define PROBY 99999
+#define LWATKOW 16
+#define PROBY 999999
 
 /************************************************************************/
 
@@ -27,7 +27,9 @@ void *wylicz(void *idWatku) {
     }
 
     double pi = (licznik*4.0)/PROBY;
-    double *wskPi = &pi;    
+    double *wskPi = malloc(sizeof(pi));
+
+    *wskPi = pi;
 
     printf("Wątek %d uznaje, że liczba pi to: %f\n", id, pi);
     pthread_exit((void*)wskPi);
@@ -61,7 +63,6 @@ int main() {
 
         pthread_join(watek[i], &wskStatus); // Dołączanie do wątków, by pobrać wartość.
         status = (double*) wskStatus;
-        printf("\n%f\n", *status); 
         piCalkowite += (*status)/LWATKOW; // Wyliczanie średniej.
     }
 
