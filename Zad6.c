@@ -24,8 +24,6 @@ Jak to naprawić? Poprawiony program:
 #define ARRAY_SIZE      2000000
 #define MEGEXTRA        1000000 // Stała do większego stosu
 
-//pthread_attr_t attr; // attr globalne
-
 void *Hello(void *threadid)
 {
    double A[ARRAY_SIZE];
