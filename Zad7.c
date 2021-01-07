@@ -6,6 +6,8 @@
 #define LWATKOW 8
 #define PROBY 99999
 
+/************************************************************************/
+
 void *wylicz(void *idWatku) {
 
     int id;
@@ -31,6 +33,8 @@ void *wylicz(void *idWatku) {
     pthread_exit((void*)wskPi);
 }
 
+/************************************************************************/
+
 int main() {
 
     void *wskStatus;
@@ -43,9 +47,13 @@ int main() {
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
+/************************************************************************/
+
     for(int i = 0; i < LWATKOW; i++)
         if(pthread_create(&watek[i], &attr, wylicz, (void *)(long)i))
             printf("\nBłąd tworzenia wątku!\n");
+
+/************************************************************************/
 
     pthread_attr_destroy(&attr); // Usunięcie zawartości &attr
     
@@ -56,6 +64,8 @@ int main() {
         printf("\n%f\n", *status); 
         piCalkowite += (*status)/LWATKOW; // Wyliczanie średniej.
     }
+
+/************************************************************************/
     
     printf("\nŚrednia wynosi: %f\n", piCalkowite);
     pthread_exit(NULL);
